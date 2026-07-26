@@ -32,7 +32,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         body.put("timestamp", LocalDateTime.now());
         body.put("status", 401);
         body.put("error", "Unauthorized");
-        body.put("message", "Debe iniciar sesión para acceder al recurso.");
+        body.put("message", "Debe iniciar sesiÃ³n para acceder al recurso.");
         body.put("path", request.getRequestURI());
 
         new ObjectMapper().writeValue(response.getOutputStream(), body);

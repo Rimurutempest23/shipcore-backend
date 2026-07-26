@@ -1,7 +1,7 @@
 package com.shipcore.security.service;
 
-import com.shipcore.user.entity.User;
-import com.shipcore.user.repository.UserRepository;
+import com.shipcore.business.data.entity.User;
+import com.shipcore.business.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .username(user.getEmail())
                 .password(user.getPassword())
                 .authorities(List.of(new SimpleGrantedAuthority(user.getRole().name())))
-                .disabled(!user.getEnabled())
+                .disabled(!user.getActive())
                 .build();
 
     }
