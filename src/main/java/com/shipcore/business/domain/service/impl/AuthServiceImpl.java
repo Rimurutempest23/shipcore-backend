@@ -3,6 +3,8 @@ package com.shipcore.business.domain.service.impl;
 import com.shipcore.business.api.dto.request.LoginRequest;
 import com.shipcore.business.api.dto.request.RegisterRequest;
 import com.shipcore.business.api.dto.response.AuthResponse;
+import com.shipcore.business.api.dto.response.OrganizationResponse;
+import com.shipcore.business.api.dto.response.UserResponse;
 import com.shipcore.business.api.exception.ResourceAlreadyExistsException;
 import com.shipcore.business.api.exception.ResourceNotFoundException;
 import com.shipcore.business.data.entity.Organization;
@@ -54,7 +56,13 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtService.generateToken(toUserDetails(user));
 
-        return new AuthResponse(token, "Bearer", "Usuario registrado correctamente.");
+        return new AuthResponse(
+                token,
+                "Bearer",
+                "Usuario registrado correctamente.",
+                toUserResponse(user),
+                toOrganizationResponse(organization)
+        );
     }
 
     @Override
@@ -72,7 +80,13 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtService.generateToken(toUserDetails(user));
 
-        return new AuthResponse(token, "Bearer", "Inicio de sesion exitoso.");
+        return new AuthResponse(
+                token,
+                "Bearer",
+                "Inicio de sesion exitoso.",
+                toUserResponse(user),
+                toOrganizationResponse(user.getOrganization())
+        );
     }
 
     private UserDetails toUserDetails(User user) {
@@ -82,6 +96,38 @@ public class AuthServiceImpl implements AuthService {
                 .password(user.getPassword())
                 .authorities(user.getRole().name())
                 .build();
+    }
+
+    private UserResponse toUserResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getProfile() == null ? null : user.getProfile().getPhone(),
+                user.getProfile() == null ? null : user.getProfile().getAddress(),
+                user.getProfile() == null ? null : user.getProfile().getBio(),
+                user.getActive(),
+                user.getOrganization().getId(),
+                user.getOrganization().getName()
+        );
+    }
+
+    private OrganizationResponse toOrganizationResponse(Organization organization) {
+        return new OrganizationResponse(
+                organization.getId(),
+                organization.getName(),
+                organization.getRuc(),
+                organization.getAddress(),
+                organization.getPhone(),
+                organization.getCountry(),
+                organization.getPlan(),
+                organization.getSoftLimit(),
+                organization.getHardLimit(),
+                organization.getCurrentUsage(),
+                organization.getActive()
+        );
     }
 
 }

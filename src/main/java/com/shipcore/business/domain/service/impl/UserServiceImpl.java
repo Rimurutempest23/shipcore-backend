@@ -6,6 +6,7 @@ import com.shipcore.business.api.exception.ResourceAlreadyExistsException;
 import com.shipcore.business.api.exception.ResourceNotFoundException;
 import com.shipcore.business.data.entity.Organization;
 import com.shipcore.business.data.entity.User;
+import com.shipcore.business.data.entity.UserProfile;
 import com.shipcore.business.data.repository.OrganizationRepository;
 import com.shipcore.business.data.repository.UserRepository;
 import com.shipcore.business.domain.mapper.UserMapper;
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
         user.setOrganization(organization);
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setActive(true);
+        syncProfile(user, request);
 
         return userMapper.toResponse(userRepository.save(user));
     }
@@ -69,6 +71,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateEntity(request, user);
         user.setOrganization(findOrganization(request.organizationId()));
         user.setPassword(passwordEncoder.encode(request.password()));
+        syncProfile(user, request);
 
         return userMapper.toResponse(userRepository.save(user));
     }
@@ -88,6 +91,27 @@ public class UserServiceImpl implements UserService {
     private Organization findOrganization(Long id) {
         return organizationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organizacion no encontrada."));
+    }
+
+    private void syncProfile(User user, UserRequest request) {
+        boolean hasProfileData = request.phone() != null || request.address() != null || request.bio() != null;
+
+        if (!hasProfileData && user.getProfile() == null) {
+            return;
+        }
+
+        UserProfile profile = user.getProfile();
+        if (profile == null) {
+            profile = UserProfile.builder()
+                    .user(user)
+                    .active(true)
+                    .build();
+            user.setProfile(profile);
+        }
+
+        profile.setPhone(request.phone());
+        profile.setAddress(request.address());
+        profile.setBio(request.bio());
     }
 
 }

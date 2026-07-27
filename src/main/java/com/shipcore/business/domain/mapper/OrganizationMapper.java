@@ -17,6 +17,8 @@ public interface OrganizationMapper {
     @Mapping(target = "users", ignore = true)
     @Mapping(target = "carriers", ignore = true)
     @Mapping(target = "quotes", ignore = true)
+    @Mapping(target = "shippingRules", ignore = true)
+    @Mapping(target = "apiKeys", ignore = true)
     Organization toEntity(OrganizationRequest request);
 
     OrganizationResponse toResponse(Organization organization);
@@ -28,6 +30,8 @@ public interface OrganizationMapper {
     @Mapping(target = "users", ignore = true)
     @Mapping(target = "carriers", ignore = true)
     @Mapping(target = "quotes", ignore = true)
+    @Mapping(target = "shippingRules", ignore = true)
+    @Mapping(target = "apiKeys", ignore = true)
     void updateEntity(OrganizationRequest request,
                       @MappingTarget Organization organization);
 

@@ -33,6 +33,21 @@ public class Organization extends BaseEntity {
     @Column(length = 20)
     private String phone;
 
+    @Column(nullable = false, length = 2)
+    private String country = "PE";
+
+    @Column(nullable = false, length = 30)
+    private String plan = "starter";
+
+    @Column(nullable = false)
+    private Integer softLimit = 1000;
+
+    @Column(nullable = false)
+    private Integer hardLimit = 1200;
+
+    @Column(nullable = false)
+    private Integer currentUsage = 0;
+
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
     @BatchSize(size = 20)
     private List<User> users = new ArrayList<>();
@@ -44,5 +59,13 @@ public class Organization extends BaseEntity {
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
     @BatchSize(size = 20)
     private List<Quote> quotes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
+    @BatchSize(size = 20)
+    private List<ShippingRule> shippingRules = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
+    @BatchSize(size = 20)
+    private List<ApiKey> apiKeys = new ArrayList<>();
 
 }

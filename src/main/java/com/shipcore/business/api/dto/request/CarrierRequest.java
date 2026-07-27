@@ -10,9 +10,15 @@ public record CarrierRequest(
         @Size(max = 120)
         String name,
 
+        @Size(max = 60)
+        String code,
+
         @NotBlank(message = "El tipo de servicio es obligatorio.")
         @Size(max = 60)
         String serviceType,
+
+        @Size(max = 500)
+        String logoUrl,
 
         @Email(message = "Correo invalido.")
         @Size(max = 80)

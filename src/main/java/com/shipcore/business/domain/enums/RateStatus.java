@@ -4,6 +4,7 @@ public enum RateStatus {
 
     DRAFT,
     ACTIVE,
+    INACTIVE,
     EXPIRED
 
 }

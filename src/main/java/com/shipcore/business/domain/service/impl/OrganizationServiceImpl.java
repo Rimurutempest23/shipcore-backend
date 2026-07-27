@@ -3,6 +3,7 @@ package com.shipcore.business.domain.service.impl;
 import com.shipcore.business.api.dto.request.OrganizationRequest;
 import com.shipcore.business.api.dto.response.OrganizationResponse;
 import com.shipcore.business.api.exception.ResourceAlreadyExistsException;
+import com.shipcore.business.api.exception.BusinessRuleException;
 import com.shipcore.business.api.exception.ResourceNotFoundException;
 import com.shipcore.business.data.entity.Organization;
 import com.shipcore.business.data.repository.OrganizationRepository;
@@ -24,6 +25,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationResponse create(OrganizationRequest request) {
+        validateLimits(request);
+
         if (organizationRepository.existsByRuc(request.ruc())) {
             throw new ResourceAlreadyExistsException("El RUC ya esta registrado.");
         }
@@ -51,6 +54,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationResponse update(Long id, OrganizationRequest request) {
+        validateLimits(request);
+
         Organization organization = findOrganization(id);
 
         if (!organization.getRuc().equals(request.ruc())
@@ -73,6 +78,16 @@ public class OrganizationServiceImpl implements OrganizationService {
     private Organization findOrganization(Long id) {
         return organizationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organizacion no encontrada."));
+    }
+
+    private void validateLimits(OrganizationRequest request) {
+        if (request.hardLimit() < request.softLimit()) {
+            throw new BusinessRuleException("El limite duro debe ser mayor o igual al limite blando.");
+        }
+
+        if (request.currentUsage() > request.hardLimit()) {
+            throw new BusinessRuleException("El uso actual no puede superar el limite duro.");
+        }
     }
 
 }

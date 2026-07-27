@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,8 +41,11 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserProfile profile;
+
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    private List<Quote> quotes = List.of();
+    private List<Quote> quotes = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

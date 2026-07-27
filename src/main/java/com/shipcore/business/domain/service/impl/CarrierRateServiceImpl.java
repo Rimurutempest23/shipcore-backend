@@ -96,6 +96,10 @@ public class CarrierRateServiceImpl implements CarrierRateService {
         if (request.validTo().isBefore(request.validFrom())) {
             throw new BusinessRuleException("La fecha final debe ser posterior o igual a la fecha inicial.");
         }
+
+        if (request.transitDaysMax() < request.transitDaysMin()) {
+            throw new BusinessRuleException("Los dias maximos de transito deben ser mayores o iguales a los dias minimos.");
+        }
     }
 
     private Carrier findCarrier(Long id) {

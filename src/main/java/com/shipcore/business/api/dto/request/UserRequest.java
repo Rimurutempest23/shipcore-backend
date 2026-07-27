@@ -4,6 +4,7 @@ import com.shipcore.business.domain.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record UserRequest(
         @NotBlank(message = "El nombre es obligatorio.")
@@ -21,6 +22,15 @@ public record UserRequest(
 
         @NotNull(message = "El rol es obligatorio.")
         Role role,
+
+        @Size(max = 20)
+        String phone,
+
+        @Size(max = 200)
+        String address,
+
+        @Size(max = 500)
+        String bio,
 
         @NotNull(message = "La organizacion es obligatoria.")
         Long organizationId

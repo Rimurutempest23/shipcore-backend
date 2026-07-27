@@ -8,6 +8,9 @@ public record UserResponse(
         String lastName,
         String email,
         Role role,
+        String phone,
+        String address,
+        String bio,
         Boolean active,
         Long organizationId,
         String organizationName

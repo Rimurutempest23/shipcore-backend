@@ -1,6 +1,7 @@
 package com.shipcore.business.data.entity;
 
 import com.shipcore.business.domain.enums.RateStatus;
+import com.shipcore.business.domain.enums.RateSource;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -30,6 +31,9 @@ public class CarrierRate extends BaseEntity {
     @Column(nullable = false, length = 60)
     private String zone;
 
+    @Column(nullable = false, length = 60)
+    private String serviceType = "standard";
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal minWeightKg;
 
@@ -41,6 +45,15 @@ public class CarrierRate extends BaseEntity {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePerKg;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal pricePerKm = BigDecimal.ZERO;
+
+    @Column(nullable = false)
+    private Integer transitDaysMin = 1;
+
+    @Column(nullable = false)
+    private Integer transitDaysMax = 1;
 
     @Column(nullable = false)
     private LocalDate validFrom;
@@ -54,6 +67,10 @@ public class CarrierRate extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private RateStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private RateSource source = RateSource.MANUAL;
 
     @Version
     private Long lockVersion;

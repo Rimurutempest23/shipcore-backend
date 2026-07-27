@@ -6,6 +6,11 @@ public record OrganizationResponse(
         String ruc,
         String address,
         String phone,
+        String country,
+        String plan,
+        Integer softLimit,
+        Integer hardLimit,
+        Integer currentUsage,
         Boolean active
 ) {
 }

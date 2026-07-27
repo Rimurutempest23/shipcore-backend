@@ -30,8 +30,14 @@ public class Carrier extends BaseEntity {
     @Column(nullable = false, length = 120)
     private String name;
 
+    @Column(length = 60)
+    private String code;
+
     @Column(nullable = false, length = 60)
     private String serviceType;
+
+    @Column(length = 500)
+    private String logoUrl;
 
     @Column(length = 80)
     private String contactEmail;
