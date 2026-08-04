@@ -17,4 +17,9 @@ public interface UserService {
 
     void delete(Long id);
 
+    UserResponse getProfile(String email);
+
+    UserResponse updateProfile(String email, com.shipcore.business.api.dto.request.ProfileUpdateRequest request);
+
 }
+

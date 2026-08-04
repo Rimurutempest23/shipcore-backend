@@ -11,9 +11,13 @@ public interface OrganizationService {
 
     List<OrganizationResponse> findAll();
 
+    OrganizationResponse findCurrentUserOrganization(String userEmail);
+
     OrganizationResponse findById(Long id);
 
     OrganizationResponse update(Long id, OrganizationRequest request);
+
+    OrganizationResponse resetUsage(Long id);
 
     void delete(Long id);
 

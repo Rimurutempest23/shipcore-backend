@@ -35,6 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .exceptionHandling(exception -> exception
@@ -47,8 +48,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers(
                                 "/api/v1/auth/**",
+                                "/api/v1/external/quotes",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()

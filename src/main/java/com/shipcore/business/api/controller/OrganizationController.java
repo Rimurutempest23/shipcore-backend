@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -38,6 +39,17 @@ public class OrganizationController {
 
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
+    public ResponseEntity<OrganizationResponse> findCurrentUserOrganization(
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                organizationService.findCurrentUserOrganization(authentication.getName())
+        );
+
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrganizationResponse> findById(
@@ -57,6 +69,17 @@ public class OrganizationController {
 
         return ResponseEntity.ok(
                 organizationService.update(id, request)
+        );
+
+    }
+
+    @PostMapping("/{id}/usage/reset")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<OrganizationResponse> resetUsage(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                organizationService.resetUsage(id)
         );
 
     }

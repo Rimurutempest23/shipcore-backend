@@ -83,6 +83,38 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse getProfile(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
+        return userMapper.toResponse(user);
+    }
+
+    @Override
+    public UserResponse updateProfile(String email, com.shipcore.business.api.dto.request.ProfileUpdateRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
+
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+
+        UserProfile profile = user.getProfile();
+        if (profile == null) {
+            profile = UserProfile.builder()
+                    .user(user)
+                    .active(true)
+                    .build();
+            user.setProfile(profile);
+        }
+
+        profile.setPhone(request.phone());
+        profile.setAddress(request.address());
+        profile.setBio(request.bio());
+
+        return userMapper.toResponse(userRepository.save(user));
+    }
+
     private User findUser(Long id) {
         return userRepository.findByIdWithOrganization(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
@@ -115,3 +147,4 @@ public class UserServiceImpl implements UserService {
     }
 
 }
+

@@ -5,6 +5,7 @@ public enum RuleOperator {
     GT,
     LT,
     EQ,
+    NEQ,
     GTE,
     LTE,
     CONTAINS

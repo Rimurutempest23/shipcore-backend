@@ -33,4 +33,11 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<com.shipcore.business.api.dto.response.UserResponse> getMe(
+            org.springframework.security.core.Authentication authentication) {
+
+        return ResponseEntity.ok(authService.getCurrentUser(authentication.getName()));
+    }
+
 }

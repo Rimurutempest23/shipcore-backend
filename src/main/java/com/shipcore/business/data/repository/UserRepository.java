@@ -31,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             """)
     Optional<User> findByIdWithOrganization(@Param("id") Long id);
 
+    Optional<User> findFirstByOrganizationIdAndActiveTrueOrderByIdAsc(Long organizationId);
+
 }

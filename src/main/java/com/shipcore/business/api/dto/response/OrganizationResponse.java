@@ -1,5 +1,7 @@
 package com.shipcore.business.api.dto.response;
 
+import java.time.LocalDateTime;
+
 public record OrganizationResponse(
         Long id,
         String name,
@@ -11,6 +13,7 @@ public record OrganizationResponse(
         Integer softLimit,
         Integer hardLimit,
         Integer currentUsage,
+        LocalDateTime createdAt,
         Boolean active
 ) {
 }

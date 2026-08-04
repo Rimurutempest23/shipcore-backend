@@ -27,14 +27,20 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
+        return generateToken(userDetails.getUsername(), null, null, null);
+    }
 
-        return Jwts.builder()
-                .subject(userDetails.getUsername())
+    public String generateToken(String username, Long userId, Long organizationId, String role) {
+        var builder = Jwts.builder()
+                .subject(username)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignKey(), Jwts.SIG.HS256)
-                .compact();
+                .expiration(new Date(System.currentTimeMillis() + expiration));
 
+        if (userId != null) builder.claim("userId", String.valueOf(userId));
+        if (organizationId != null) builder.claim("organizationId", String.valueOf(organizationId));
+        if (role != null) builder.claim("role", role);
+
+        return builder.signWith(getSignKey(), Jwts.SIG.HS256).compact();
     }
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

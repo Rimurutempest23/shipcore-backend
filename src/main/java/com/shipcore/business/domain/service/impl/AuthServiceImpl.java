@@ -47,14 +47,19 @@ public class AuthServiceImpl implements AuthService {
                 .lastName(request.lastName())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(Role.ROLE_CLIENT)
+                .role(Role.ROLE_OPERATOR)
                 .organization(organization)
                 .active(true)
                 .build();
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(toUserDetails(user));
+        String token = jwtService.generateToken(
+                user.getEmail(),
+                user.getId(),
+                user.getOrganization() != null ? user.getOrganization().getId() : null,
+                user.getRole() != null ? user.getRole().name() : "ROLE_OPERATOR"
+        );
 
         return new AuthResponse(
                 token,
@@ -78,7 +83,12 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
 
-        String token = jwtService.generateToken(toUserDetails(user));
+        String token = jwtService.generateToken(
+                user.getEmail(),
+                user.getId(),
+                user.getOrganization() != null ? user.getOrganization().getId() : null,
+                user.getRole() != null ? user.getRole().name() : "ROLE_OPERATOR"
+        );
 
         return new AuthResponse(
                 token,
@@ -87,6 +97,14 @@ public class AuthServiceImpl implements AuthService {
                 toUserResponse(user),
                 toOrganizationResponse(user.getOrganization())
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
+        return toUserResponse(user);
     }
 
     private UserDetails toUserDetails(User user) {
@@ -126,6 +144,7 @@ public class AuthServiceImpl implements AuthService {
                 organization.getSoftLimit(),
                 organization.getHardLimit(),
                 organization.getCurrentUsage(),
+                organization.getCreatedAt(),
                 organization.getActive()
         );
     }
